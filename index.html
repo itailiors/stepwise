@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>STEPWISE — Daily Voice-Leading Puzzle</title>
+    <meta name="description" content="Morph one chord into another by sliding a single voice per move. A daily voice-leading ladder puzzle — beat Par." />
+    <meta name="theme-color" content="#F5F3EE" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="STEPWISE — Daily Voice-Leading Puzzle" />
+    <meta property="og:description" content="Slide one voice at a time from the Start chord to the Target. Every step must be a real chord. Beat Par." />
+    <meta property="og:image" content="og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="og-image.png" />
+    <link rel="icon" type="image/svg+xml" href="./assets/brand/favicon.svg" />
+    <link rel="apple-touch-icon" href="./assets/brand/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Apply the saved theme before first paint (no light flash for dark-mode players).
+      try {
+        var p = JSON.parse(localStorage.getItem('stepwise:prefs') || '{}');
+        var t = p.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

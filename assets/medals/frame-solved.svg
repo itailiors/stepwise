@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none" role="img" aria-label="Solved Rank Bezel">
+  <circle cx="80" cy="80" r="76" stroke="#1D5FD6" stroke-opacity="0.6" stroke-width="2"/>
+  <circle cx="80" cy="80" r="70" stroke="#5C9BFF" stroke-opacity="0.35" stroke-width="1"/>
+  <g stroke="#1D5FD6" stroke-width="1.75" stroke-linecap="round">
+    <line x1="80" y1="5" x2="80" y2="12"/>
+    <line x1="155" y1="80" x2="148" y2="80"/>
+    <line x1="80" y1="155" x2="80" y2="148"/>
+    <line x1="5" y1="80" x2="12" y2="80"/>
+  </g>
+</svg>

@@ -1,0 +1,372 @@
+/* ==========================================================================
+   STEPWISE Design System Tokens — v1.0.0
+   Swiss Acoustic Minimalism & Architectural Precision
+   1:1 Parity with design/tokens.json
+   ========================================================================== */
+
+:root,
+[data-theme="light"] {
+  /* Surfaces & Canvas — Archival Paper */
+  --sw-bg-canvas: #F5F3EE;
+  --sw-bg-surface: #FFFFFF;
+  --sw-bg-recessed: #ECE8DF;
+  --sw-bg-elevated: #FAF9F6;
+  --sw-bg-scrim: rgba(24, 25, 28, 0.48);
+
+  /* Architectural Rules & Borders */
+  --sw-border-subtle: #DDD7CC;
+  --sw-border-strong: #B8B0A2;
+  --sw-border-hairline: rgba(24, 25, 28, 0.08);
+
+  /* Typography Ink */
+  --sw-text-primary: #18191C;
+  --sw-text-secondary: #4E525B;
+  --sw-text-muted: #5D626D;
+  --sw-text-inverse: #FAF9F6;
+
+  /* Chromatic Rail Landmarks */
+  --sw-rail-white-key: #FFFFFF;
+  --sw-rail-white-key-border: #DCD6CA;
+  --sw-rail-black-key: #DFD9CD;
+  --sw-rail-black-key-cap: #3A3D45;
+  --sw-rail-ghost-edge-bg: rgba(236, 232, 223, 0.65);
+  --sw-rail-axis-grid: rgba(24, 25, 28, 0.09);
+
+  /* 4 Colorblind-Safe Voice Accents */
+  --sw-voice-1: #1D5FD6;
+  --sw-voice-1-hover: #174EB3;
+  --sw-voice-1-on: #FFFFFF;
+  --sw-voice-1-tint: #E8F0FE;
+  --sw-voice-1-border: #8EB4F5;
+  --sw-voice-1-thread: #1D5FD6;
+
+  --sw-voice-2: #C24E00;
+  --sw-voice-2-hover: #A34100;
+  --sw-voice-2-on: #FFFFFF;
+  --sw-voice-2-tint: #FFF0E5;
+  --sw-voice-2-border: #F2A879;
+  --sw-voice-2-thread: #C24E00;
+
+  --sw-voice-3: #0D7A6D;
+  --sw-voice-3-hover: #096157;
+  --sw-voice-3-on: #FFFFFF;
+  --sw-voice-3-tint: #E5F6F3;
+  --sw-voice-3-border: #7BC9BE;
+  --sw-voice-3-thread: #0D7A6D;
+
+  --sw-voice-4: #8E3A8A;
+  --sw-voice-4-hover: #742E70;
+  --sw-voice-4-on: #FFFFFF;
+  --sw-voice-4-tint: #F7EBF6;
+  --sw-voice-4-border: #D19BCE;
+  --sw-voice-4-thread: #8E3A8A;
+
+  /* Semantic Gameplay Feedback */
+  --sw-target-match-ring: #B77900;
+  --sw-target-match-halo: rgba(217, 155, 22, 0.28);
+  --sw-target-match-tint: #FEF6DF;
+  --sw-target-match-text: #7A5100;
+
+  --sw-valid-solid: #137A4B;
+  --sw-valid-surface: #E6F6EE;
+  --sw-valid-border: #7CCBA5;
+  --sw-valid-text: #0E5C38;
+
+  --sw-invalid-solid: #B83242;
+  --sw-invalid-surface: #FDECEF;
+  --sw-invalid-border: #E79BA4;
+  --sw-invalid-text: #8F1F2D;
+
+  --sw-lava-solid: #C62828;
+  --sw-lava-surface: #FDE8E8;
+  --sw-lava-stripe: rgba(198, 40, 40, 0.20);
+  --sw-lava-text: #991B1B;
+
+  --sw-tension-solid: #B45309;
+  --sw-tension-surface: #FEF3C7;
+  --sw-tension-border: #F59E0B;
+  --sw-tension-text: #7C3504;
+
+  --sw-checkpoint-pending-stroke: #0D7A6D;
+  --sw-checkpoint-pending-surface: #E5F6F3;
+  --sw-checkpoint-pending-text: #095B51;
+  --sw-checkpoint-satisfied-fill: #137A4B;
+  --sw-checkpoint-satisfied-surface: #E6F6EE;
+  --sw-checkpoint-satisfied-text: #0E5C38;
+  --sw-checkpoint-satisfied-glow: rgba(19, 122, 75, 0.26);
+
+  /* Golf Rank Tiers */
+  --sw-rank-eagle-accent: #9A6700;
+  --sw-rank-eagle-surface: #FEF6DF;
+  --sw-rank-eagle-border: #D9A83B;
+  --sw-rank-eagle-text: #734B00;
+
+  --sw-rank-par-accent: #137A4B;
+  --sw-rank-par-surface: #E6F6EE;
+  --sw-rank-par-border: #7CCBA5;
+  --sw-rank-par-text: #0E5C38;
+
+  --sw-rank-solved-accent: #2855A8;
+  --sw-rank-solved-surface: #E8F0FE;
+  --sw-rank-solved-border: #8EB4F5;
+  --sw-rank-solved-text: #1E4287;
+
+  --sw-rank-fail-accent: #5E636E;
+  --sw-rank-fail-surface: #ECE8DF;
+  --sw-rank-fail-border: #B8B0A2;
+  --sw-rank-fail-text: #454952;
+
+  /* Chord Quality Subtle Tints */
+  --sw-q-major-tint: #EFF4FC;
+  --sw-q-major-border: #C5D8F6;
+  --sw-q-major-text: #1D4A9A;
+
+  --sw-q-minor-tint: #F2EFF9;
+  --sw-q-minor-border: #CFC3EB;
+  --sw-q-minor-text: #503987;
+
+  --sw-q-sus-tint: #E9F5F3;
+  --sw-q-sus-border: #B4DDD6;
+  --sw-q-sus-text: #0C5D53;
+
+  --sw-q-dim-tint: #FDF0F2;
+  --sw-q-dim-border: #EBC0C7;
+  --sw-q-dim-text: #8B2433;
+
+  --sw-q-aug-tint: #FEF3E8;
+  --sw-q-aug-border: #F2CAA5;
+  --sw-q-aug-text: #984304;
+
+  --sw-q-seventh-tint: #F8ECF7;
+  --sw-q-seventh-border: #DFB8DC;
+  --sw-q-seventh-text: #70286D;
+
+  /* Elevations & Halos */
+  --sw-shadow-surface: 0 1px 2px rgba(24, 25, 28, 0.06), 0 4px 12px rgba(24, 25, 28, 0.04);
+  --sw-shadow-elevated: 0 8px 24px rgba(24, 25, 28, 0.12), 0 2px 6px rgba(24, 25, 28, 0.06);
+  --sw-shadow-puck: 0 3px 8px rgba(24, 25, 28, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  --sw-shadow-puck-active: 0 0 0 3px rgba(24, 25, 28, 0.18), 0 6px 14px rgba(24, 25, 28, 0.22);
+  --sw-shadow-target-glow: 0 0 0 3px #B77900, 0 0 14px rgba(217, 155, 22, 0.35);
+
+  /* Typography */
+  --sw-font-display: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --sw-font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --sw-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --sw-text-micro: 11px;
+  --sw-text-caption: 12px;
+  --sw-text-body-sm: 13px;
+  --sw-text-body: 15px;
+  --sw-text-chord-row: 16px;
+  --sw-text-chord-anchor: 19px;
+  --sw-text-title: 22px;
+  --sw-text-modal: 28px;
+
+  /* Spacing (4px architectural grid) */
+  --sw-space-1: 4px;
+  --sw-space-2: 8px;
+  --sw-space-3: 12px;
+  --sw-space-4: 16px;
+  --sw-space-5: 20px;
+  --sw-space-6: 24px;
+  --sw-space-8: 32px;
+  --sw-space-10: 40px;
+  --sw-space-12: 48px;
+
+  /* Layout & Ergonomics */
+  --sw-tap-min: 44px;
+  --sw-puck-size: 48px;
+  --sw-header-h: 52px;
+  --sw-hud-h: 44px;
+
+  /* Radii */
+  --sw-radius-xs: 4px;
+  --sw-radius-sm: 8px;
+  --sw-radius-md: 12px;
+  --sw-radius-lg: 16px;
+  --sw-radius-xl: 22px;
+  --sw-radius-pill: 9999px;
+
+  /* Z-Index */
+  --sw-z-base: 1;
+  --sw-z-threads: 5;
+  --sw-z-nodes: 10;
+  --sw-z-pucks: 20;
+  --sw-z-puck-selected: 25;
+  --sw-z-hud: 30;
+  --sw-z-toast: 50;
+  --sw-z-drawer: 70;
+  --sw-z-modal: 90;
+
+  /* Motion */
+  --sw-ease-snappy: cubic-bezier(0.22, 1, 0.36, 1);
+  --sw-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --sw-ease-thread: cubic-bezier(0.4, 0, 0.2, 1);
+  --sw-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  --sw-dur-instant: 120ms;
+  --sw-dur-fast: 180ms;
+  --sw-dur-normal: 280ms;
+  --sw-dur-thread: 340ms;
+  --sw-dur-bounce: 380ms;
+  --sw-dur-halo: 420ms;
+  --sw-dur-playback-step: 680ms;
+}
+
+[data-theme="dark"] {
+  /* Surfaces & Canvas — Midnight Studio */
+  --sw-bg-canvas: #111318;
+  --sw-bg-surface: #191C24;
+  --sw-bg-recessed: #0D0F14;
+  --sw-bg-elevated: #222631;
+  --sw-bg-scrim: rgba(7, 8, 12, 0.72);
+
+  /* Architectural Rules & Borders */
+  --sw-border-subtle: #2A2F3D;
+  --sw-border-strong: #434A5E;
+  --sw-border-hairline: rgba(243, 241, 236, 0.08);
+
+  /* Typography Ink */
+  --sw-text-primary: #F3F1EC;
+  --sw-text-secondary: #B4B9C6;
+  --sw-text-muted: #8A90A0;
+  --sw-text-inverse: #111318;
+
+  /* Chromatic Rail Landmarks */
+  --sw-rail-white-key: #1E222C;
+  --sw-rail-white-key-border: #2E3444;
+  --sw-rail-black-key: #12151C;
+  --sw-rail-black-key-cap: #0A0C10;
+  --sw-rail-ghost-edge-bg: rgba(13, 15, 20, 0.75);
+  --sw-rail-axis-grid: rgba(243, 241, 236, 0.08);
+
+  /* 4 Colorblind-Safe Voice Accents */
+  --sw-voice-1: #5C9BFF;
+  --sw-voice-1-hover: #7BB0FF;
+  --sw-voice-1-on: #0B111E;
+  --sw-voice-1-tint: rgba(92, 155, 255, 0.16);
+  --sw-voice-1-border: rgba(92, 155, 255, 0.45);
+  --sw-voice-1-thread: #5C9BFF;
+
+  --sw-voice-2: #FF8F3F;
+  --sw-voice-2-hover: #FFA666;
+  --sw-voice-2-on: #1A1008;
+  --sw-voice-2-tint: rgba(255, 143, 63, 0.16);
+  --sw-voice-2-border: rgba(255, 143, 63, 0.45);
+  --sw-voice-2-thread: #FF8F3F;
+
+  --sw-voice-3: #34D1BC;
+  --sw-voice-3-hover: #5CDDCB;
+  --sw-voice-3-on: #081B18;
+  --sw-voice-3-tint: rgba(52, 209, 188, 0.16);
+  --sw-voice-3-border: rgba(52, 209, 188, 0.45);
+  --sw-voice-3-thread: #34D1BC;
+
+  --sw-voice-4: #D982E6;
+  --sw-voice-4-hover: #E39FED;
+  --sw-voice-4-on: #1C0B1F;
+  --sw-voice-4-tint: rgba(217, 130, 230, 0.16);
+  --sw-voice-4-border: rgba(217, 130, 230, 0.45);
+  --sw-voice-4-thread: #D982E6;
+
+  /* Semantic Gameplay Feedback */
+  --sw-target-match-ring: #F5C451;
+  --sw-target-match-halo: rgba(245, 196, 81, 0.32);
+  --sw-target-match-tint: rgba(245, 196, 81, 0.16);
+  --sw-target-match-text: #FAD679;
+
+  --sw-valid-solid: #3DD68C;
+  --sw-valid-surface: rgba(61, 214, 140, 0.14);
+  --sw-valid-border: rgba(61, 214, 140, 0.45);
+  --sw-valid-text: #6FE8AE;
+
+  --sw-invalid-solid: #FF6B7A;
+  --sw-invalid-surface: rgba(255, 107, 122, 0.15);
+  --sw-invalid-border: rgba(255, 107, 122, 0.48);
+  --sw-invalid-text: #FF99A3;
+
+  --sw-lava-solid: #FF4D5A;
+  --sw-lava-surface: rgba(255, 77, 90, 0.16);
+  --sw-lava-stripe: rgba(255, 77, 90, 0.24);
+  --sw-lava-text: #FF99A1;
+
+  --sw-tension-solid: #FBBF24;
+  --sw-tension-surface: rgba(251, 191, 36, 0.14);
+  --sw-tension-border: rgba(251, 191, 36, 0.55);
+  --sw-tension-text: #FDE08D;
+
+  --sw-checkpoint-pending-stroke: #34D1BC;
+  --sw-checkpoint-pending-surface: rgba(52, 209, 188, 0.14);
+  --sw-checkpoint-pending-text: #76E6D7;
+  --sw-checkpoint-satisfied-fill: #3DD68C;
+  --sw-checkpoint-satisfied-surface: rgba(61, 214, 140, 0.16);
+  --sw-checkpoint-satisfied-text: #7BF0B8;
+  --sw-checkpoint-satisfied-glow: rgba(61, 214, 140, 0.34);
+
+  /* Golf Rank Tiers */
+  --sw-rank-eagle-accent: #F6C85F;
+  --sw-rank-eagle-surface: rgba(246, 200, 95, 0.15);
+  --sw-rank-eagle-border: rgba(246, 200, 95, 0.45);
+  --sw-rank-eagle-text: #FAD987;
+
+  --sw-rank-par-accent: #3DD68C;
+  --sw-rank-par-surface: rgba(61, 214, 140, 0.14);
+  --sw-rank-par-border: rgba(61, 214, 140, 0.45);
+  --sw-rank-par-text: #7BF0B8;
+
+  --sw-rank-solved-accent: #7AA7FF;
+  --sw-rank-solved-surface: rgba(122, 167, 255, 0.15);
+  --sw-rank-solved-border: rgba(122, 167, 255, 0.45);
+  --sw-rank-solved-text: #A3C4FF;
+
+  --sw-rank-fail-accent: #9AA0AE;
+  --sw-rank-fail-surface: rgba(154, 160, 174, 0.14);
+  --sw-rank-fail-border: rgba(154, 160, 174, 0.38);
+  --sw-rank-fail-text: #C2C7D1;
+
+  /* Chord Quality Subtle Tints */
+  --sw-q-major-tint: rgba(92, 155, 255, 0.14);
+  --sw-q-major-border: rgba(92, 155, 255, 0.32);
+  --sw-q-major-text: #9AC2FF;
+
+  --sw-q-minor-tint: rgba(167, 139, 250, 0.14);
+  --sw-q-minor-border: rgba(167, 139, 250, 0.34);
+  --sw-q-minor-text: #C8B6FF;
+
+  --sw-q-sus-tint: rgba(52, 209, 188, 0.14);
+  --sw-q-sus-border: rgba(52, 209, 188, 0.32);
+  --sw-q-sus-text: #7AE6D7;
+
+  --sw-q-dim-tint: rgba(255, 107, 122, 0.14);
+  --sw-q-dim-border: rgba(255, 107, 122, 0.32);
+  --sw-q-dim-text: #FFA1AB;
+
+  --sw-q-aug-tint: rgba(255, 143, 63, 0.14);
+  --sw-q-aug-border: rgba(255, 143, 63, 0.32);
+  --sw-q-aug-text: #FFB27A;
+
+  --sw-q-seventh-tint: rgba(217, 130, 230, 0.14);
+  --sw-q-seventh-border: rgba(217, 130, 230, 0.32);
+  --sw-q-seventh-text: #EAAEF2;
+
+  /* Elevations & Halos */
+  --sw-shadow-surface: 0 1px 2px rgba(0, 0, 0, 0.32), 0 6px 16px rgba(0, 0, 0, 0.24);
+  --sw-shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.56), 0 2px 8px rgba(0, 0, 0, 0.36);
+  --sw-shadow-puck: 0 4px 10px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  --sw-shadow-puck-active: 0 0 0 3px rgba(243, 241, 236, 0.32), 0 0 18px rgba(92, 155, 255, 0.28);
+  --sw-shadow-target-glow: 0 0 0 3px #F5C451, 0 0 18px rgba(245, 196, 81, 0.42);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  [data-theme="light"],
+  [data-theme="dark"] {
+    --sw-dur-instant: 0ms;
+    --sw-dur-fast: 0ms;
+    --sw-dur-normal: 0ms;
+    --sw-dur-thread: 0ms;
+    --sw-dur-bounce: 0ms;
+    --sw-dur-halo: 0ms;
+    --sw-dur-playback-step: 680ms;
+  }
+}

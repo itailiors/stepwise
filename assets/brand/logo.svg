@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 232 48" fill="none" role="img" aria-label="STEPWISE">
+  <!-- Precision Architectural Mark -->
+  <rect x="2" y="4" width="40" height="40" rx="10" fill="#18191C"/>
+  <rect x="2.75" y="4.75" width="38.5" height="38.5" rx="9.25" stroke="#434A5E" stroke-opacity="0.45" stroke-width="1.5"/>
+
+  <!-- 3 Vertical Voice Channels -->
+  <line x1="13" y1="12" x2="13" y2="36" stroke="#5C9BFF" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round"/>
+  <path d="M22 13 C22 20, 26 22, 26 35" stroke="#FF8F3F" stroke-width="2.25" stroke-linecap="round"/>
+  <line x1="33" y1="12" x2="33" y2="36" stroke="#34D1BC" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Chromatic Nodes -->
+  <circle cx="13" cy="15" r="3.2" fill="#5C9BFF"/>
+  <circle cx="13" cy="33" r="3.2" fill="#5C9BFF"/>
+  <circle cx="22" cy="14" r="3.2" fill="#FF8F3F"/>
+  <circle cx="26" cy="34" r="3.5" fill="#F5C451"/>
+  <circle cx="33" cy="15" r="3.2" fill="#34D1BC"/>
+  <circle cx="33" cy="33" r="3.2" fill="#34D1BC"/>
+
+  <!-- Swiss Geometric Wordmark -->
+  <text x="54" y="31.5" fill="currentColor" font-family="'Space Grotesk', system-ui, -apple-system, sans-serif" font-size="23" font-weight="700" letter-spacing="0.11em">STEPWISE</text>
+</svg>

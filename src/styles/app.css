@@ -1,0 +1,254 @@
+/* STEPWISE production additions on top of the canonical design/preview/preview.css.
+   Only states the zero-logic prototype never needed (drag, playback, lava pulse, locked medals).
+   Tokens only: every color binds to a --sw-* variable from design/tokens.css. */
+
+/* ---- >=44px touch targets without changing the prototype's visual sizes ----
+   Compact controls get an invisible hit-area extension via ::after. */
+.sw-icon-btn,
+.sw-view-tab,
+.sw-voice-chip,
+.sw-rule-pill,
+.sw-seg-btn,
+.sw-rule-banner-close {
+  position: relative;
+}
+/* .sw-modal-close keeps the prototype's position:absolute (already a containing block),
+   except inside the drawer header where it sits in flow. */
+.sw-drawer-header .sw-modal-close {
+  position: relative;
+}
+
+.sw-icon-btn::after,
+.sw-view-tab::after,
+.sw-voice-chip::after,
+.sw-rule-pill::after,
+.sw-seg-btn::after,
+.sw-modal-close::after,
+.sw-rule-banner-close::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, var(--sw-tap-min));
+  height: max(100%, var(--sw-tap-min));
+  transform: translate(-50%, -50%);
+}
+
+/* ---- Rail drag ---- */
+.sw-rail-puck {
+  touch-action: none;
+  cursor: grab;
+  transition:
+    left var(--sw-dur-fast) var(--sw-ease-snappy),
+    box-shadow var(--sw-dur-halo) var(--sw-ease-snappy);
+}
+
+.sw-rail-puck.is-dragging {
+  cursor: grabbing;
+  z-index: var(--sw-z-puck-selected);
+  transition: left var(--sw-dur-instant) var(--sw-ease-snappy);
+}
+
+.sw-rail-puck.is-dragging.is-drop-valid {
+  box-shadow: 0 0 0 3px var(--sw-valid-solid), var(--sw-shadow-puck-active);
+}
+
+.sw-rail-puck.is-dragging.is-drop-invalid {
+  box-shadow: 0 0 0 3px var(--sw-invalid-solid), var(--sw-shadow-puck-active);
+}
+
+.sw-rail-slot.is-drop-valid {
+  box-shadow: inset 0 0 0 2px var(--sw-valid-border);
+}
+
+.sw-rail-slot.is-drop-invalid {
+  box-shadow: inset 0 0 0 2px var(--sw-invalid-border);
+}
+
+.sw-rail-slot.is-lava-pulse::after {
+  animation: sw-lava-pulse calc(var(--sw-dur-bounce) * 2) var(--sw-ease-spring);
+}
+
+@keyframes sw-lava-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+/* ---- Clock ---- */
+.sw-clock-node {
+  cursor: pointer;
+}
+
+.sw-clock-step-ghost {
+  fill: none;
+  stroke: var(--sw-border-strong);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.sw-clock-node.is-reachable:hover .sw-clock-step-ghost {
+  stroke: var(--sw-text-secondary);
+}
+
+.sw-clock-lava-x {
+  fill: var(--sw-lava-text);
+  font-family: var(--sw-font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.sw-clock-lava.is-pulsing {
+  animation: sw-lava-pulse calc(var(--sw-dur-bounce) * 2) var(--sw-ease-spring);
+}
+
+.sw-clock-vertex-group circle {
+  transition: none;
+}
+
+.sw-clock-vertex-group.is-bouncing {
+  animation: sw-clock-shake var(--sw-dur-bounce) var(--sw-ease-spring);
+}
+
+@keyframes sw-clock-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(6px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+.sw-clock-checkpoint-text {
+  font-family: var(--sw-font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  fill: var(--sw-checkpoint-pending-text);
+}
+
+.sw-clock-checkpoint-text.is-satisfied {
+  fill: var(--sw-checkpoint-satisfied-text);
+}
+
+/* ---- Ladder playback cascade ---- */
+.sw-anchor-card.is-playing,
+.sw-ladder-row.is-playing {
+  border-color: var(--sw-text-primary);
+  transform: scale(1.01);
+  transition:
+    transform var(--sw-dur-fast) var(--sw-ease-snappy),
+    border-color var(--sw-dur-fast) ease;
+}
+
+.sw-ladder-row.is-playing .sw-step-idx {
+  color: var(--sw-text-primary);
+}
+
+.sw-thread-connector.is-surging .sw-thread-moving {
+  stroke-width: 4;
+  filter: drop-shadow(0 0 3px var(--sw-target-match-halo));
+  transition: stroke-width var(--sw-dur-normal) var(--sw-ease-snappy);
+}
+
+.sw-thread-connector.is-surging .sw-delta-chip {
+  animation: sw-delta-pop 240ms var(--sw-ease-spring);
+}
+
+@keyframes sw-delta-pop {
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+.sw-anchor-target.is-shimmering .sw-target-beacon {
+  animation: sw-beacon-shimmer 480ms var(--sw-ease-snappy);
+}
+
+@keyframes sw-beacon-shimmer {
+  0% {
+    box-shadow: 0 0 0 0 var(--sw-target-match-halo);
+  }
+  50% {
+    box-shadow: 0 0 0 8px var(--sw-target-match-halo);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.sw-thread-chevron {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.8;
+}
+
+.sw-row-checkpoint {
+  display: inline-flex;
+  color: var(--sw-checkpoint-satisfied-text);
+}
+
+.sw-row-checkpoint svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* ---- Steppers ---- */
+.sw-step-btn.is-lava-dest .sw-step-note {
+  color: var(--sw-lava-text);
+}
+
+/* ---- Medals & stats ---- */
+.sw-medal-img.is-locked,
+.sw-shelf-item.is-locked img {
+  filter: grayscale(1);
+  opacity: 0.32;
+}
+
+.sw-shelf-item.is-locked span {
+  color: var(--sw-text-muted);
+}
+
+.sw-dist-fill.is-missed {
+  background: var(--sw-rank-fail-accent);
+  color: var(--sw-text-inverse);
+}
+
+.sw-dist-fill.is-empty {
+  min-width: 0;
+  padding: 0;
+  overflow: visible;
+  color: var(--sw-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-rail-puck,
+  .sw-anchor-card.is-playing,
+  .sw-ladder-row.is-playing {
+    transition: none;
+  }
+  .sw-anchor-card.is-playing,
+  .sw-ladder-row.is-playing {
+    transform: none;
+  }
+  .sw-rail-slot.is-lava-pulse::after,
+  .sw-clock-lava.is-pulsing,
+  .sw-clock-vertex-group.is-bouncing,
+  .sw-thread-connector.is-surging .sw-delta-chip,
+  .sw-anchor-target.is-shimmering .sw-target-beacon {
+    animation: none !important;
+  }
+}

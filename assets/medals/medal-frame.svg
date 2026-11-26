@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none" role="img" aria-label="Architectural Medal Bezel">
+  <!-- Outer precision machined bezel -->
+  <circle cx="80" cy="80" r="76" stroke="currentColor" stroke-opacity="0.22" stroke-width="1.5"/>
+  <circle cx="80" cy="80" r="68" stroke="currentColor" stroke-opacity="0.14" stroke-width="1"/>
+  <!-- 12 Chromatic Degree Ticks -->
+  <g stroke="currentColor" stroke-opacity="0.45" stroke-width="1.75" stroke-linecap="round">
+    <line x1="80" y1="6" x2="80" y2="12"/>
+    <line x1="117" y1="15.9" x2="114" y2="21.1"/>
+    <line x1="144.1" y1="43" x2="138.9" y2="46"/>
+    <line x1="154" y1="80" x2="148" y2="80"/>
+    <line x1="144.1" y1="117" x2="138.9" y2="114"/>
+    <line x1="117" y1="144.1" x2="114" y2="138.9"/>
+    <line x1="80" y1="154" x2="80" y2="148"/>
+    <line x1="43" y1="144.1" x2="46" y2="138.9"/>
+    <line x1="15.9" y1="117" x2="21.1" y2="114"/>
+    <line x1="6" y1="80" x2="12" y2="80"/>
+    <line x1="15.9" y1="43" x2="21.1" y2="46"/>
+    <line x1="43" y1="15.9" x2="46" y2="21.1"/>
+  </g>
+</svg>

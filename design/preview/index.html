@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>STEPWISE — Interactive Design &amp; Motion Prototype</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/brand/favicon.svg">
+  <link rel="apple-touch-icon" href="../../assets/brand/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="./preview.css">
+</head>
+<body>
+  <div class="sw-shell" id="sw-shell">
+    <!-- Top Architectural Header -->
+    <header class="sw-header" aria-label="Game header">
+      <div class="sw-header-left">
+        <a href="#top" class="sw-brand-lockup" aria-label="STEPWISE Home" onclick="return false;">
+          <img src="../../assets/brand/favicon.svg" alt="" class="sw-brand-mark" width="30" height="30">
+          <span class="sw-brand-wordmark">STEPWISE</span>
+        </a>
+        <span class="sw-puzzle-num" id="puzzle-num">#88</span>
+        <button type="button" class="sw-rule-pill" id="rule-pill" title="View daily rule details">
+          <span class="sw-rule-icon" id="rule-icon"></span>
+          <span id="rule-label">Half-Steps ±1</span>
+        </button>
+      </div>
+
+      <div class="sw-header-actions">
+        <button type="button" class="sw-icon-btn" id="btn-demo-toggle" aria-expanded="false" aria-controls="demo-bar" title="Prototype State Controls">
+          <span class="sw-demo-dot" aria-hidden="true"></span>
+          <span class="sw-demo-pill-text">States</span>
+        </button>
+        <button type="button" class="sw-icon-btn" id="btn-sound" aria-label="Toggle sound state" aria-pressed="false" title="Silent-first mode (visual toggle)">
+          <span class="sw-icon" id="icon-sound"></span>
+        </button>
+        <button type="button" class="sw-icon-btn" id="btn-theme" aria-label="Toggle Light or Dark theme" title="Switch Light / Dark theme">
+          <span class="sw-icon" id="icon-theme"></span>
+        </button>
+        <button type="button" class="sw-icon-btn" id="btn-stats" aria-label="Open Stats and Settings" title="Stats & Settings">
+          <span class="sw-icon" id="icon-stats"></span>
+        </button>
+        <button type="button" class="sw-icon-btn" id="btn-help" aria-label="How to play" title="How to Play">
+          <span class="sw-icon" id="icon-help"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Collapsible Prototype State Bar (Zero-logic visual state triggers) -->
+    <section class="sw-demo-bar" id="demo-bar" hidden aria-label="Visual prototype state controls">
+      <div class="sw-demo-bar-inner">
+        <div class="sw-demo-group">
+          <span class="sw-demo-heading">Mock Daily Preset</span>
+          <div class="sw-demo-chips" role="group" aria-label="Puzzle presets">
+            <button type="button" class="sw-chip is-active" data-preset="halfstep">#88 ±1 Half-Steps</button>
+            <button type="button" class="sw-chip" data-preset="lava">#89 Lava G#</button>
+            <button type="button" class="sw-chip" data-preset="checkpoint">#90 Checkpoint Dim</button>
+            <button type="button" class="sw-chip" data-preset="sevenths">#91 4-Voice 7ths</button>
+          </div>
+        </div>
+        <div class="sw-demo-group">
+          <span class="sw-demo-heading">Mock Ladder &amp; Micro-States</span>
+          <div class="sw-demo-chips">
+            <button type="button" class="sw-chip" id="demo-reset-0">Start (0)</button>
+            <button type="button" class="sw-chip" id="demo-step-next">Next Scripted Step ▶</button>
+            <button type="button" class="sw-chip" id="demo-invalid">Trigger Invalid Bounce</button>
+            <button type="button" class="sw-chip" id="demo-tension">Budget Tension (6/8)</button>
+            <button type="button" class="sw-chip" id="demo-out-of-moves">Out of Moves</button>
+          </div>
+        </div>
+        <div class="sw-demo-group">
+          <span class="sw-demo-heading">Views &amp; Spelling</span>
+          <div class="sw-demo-chips">
+            <button type="button" class="sw-chip" id="demo-open-resolve">Resolution + Cascade</button>
+            <button type="button" class="sw-chip" id="demo-open-share">Share Modal</button>
+            <button type="button" class="sw-chip" id="demo-open-howto">How-to-Play</button>
+            <button type="button" class="sw-chip" id="demo-open-stats">Stats &amp; Settings</button>
+            <button type="button" class="sw-chip" id="demo-spelling-toggle">Spelling: # / b (<span id="demo-spelling-val">#</span>)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rule Tooltip Strip (Shown on Rule Pill tap) -->
+    <div class="sw-rule-banner" id="rule-banner" hidden>
+      <span id="rule-banner-text">Half-Steps Only: Each move shifts one voice by exactly +1 or -1 semitone.</span>
+      <button type="button" class="sw-rule-banner-close" id="rule-banner-close" aria-label="Dismiss rule explanation">✕</button>
+    </div>
+
+    <!-- Main Responsive Workspace (Single-column mobile, 2-column desktop) -->
+    <main class="sw-workspace">
+      <!-- LEFT COLUMN: Harmonic Progression Ladder -->
+      <section class="sw-ladder-column" aria-label="Harmonic Progression Ladder">
+        <!-- Start Chord Anchor -->
+        <div class="sw-anchor-card sw-anchor-start" id="start-anchor">
+          <div class="sw-anchor-meta">
+            <span class="sw-eyebrow">START</span>
+            <div class="sw-anchor-chord-line">
+              <strong class="sw-chord-name" id="start-chord-name">C Maj</strong>
+              <span class="sw-quality-badge" data-quality="major" id="start-quality-badge">Maj</span>
+            </div>
+            <span class="sw-pitch-list" id="start-pitch-list">C · E · G</span>
+          </div>
+          <div class="sw-track-axis" id="start-track-axis" aria-hidden="true"></div>
+        </div>
+
+        <!-- Dynamic Committed Steps + SVG Voice Threads -->
+        <div class="sw-ladder-scroll" id="ladder-scroll" aria-live="polite">
+          <div class="sw-ladder-list" id="ladder-list"></div>
+        </div>
+
+        <!-- Target Chord Goal Bar -->
+        <div class="sw-anchor-card sw-anchor-target" id="target-anchor">
+          <div class="sw-anchor-meta">
+            <div class="sw-target-top-row">
+              <span class="sw-eyebrow">TARGET</span>
+              <span class="sw-match-counter" id="target-match-counter">Match 1/3</span>
+            </div>
+            <div class="sw-anchor-chord-line">
+              <strong class="sw-chord-name" id="target-chord-name">F# Min</strong>
+              <span class="sw-quality-badge" data-quality="minor" id="target-quality-badge">Min</span>
+              <span class="sw-checkpoint-badge" id="checkpoint-badge" hidden>
+                <span class="sw-icon-sm" id="checkpoint-icon"></span>
+                <span id="checkpoint-label">Dim</span>
+              </span>
+            </div>
+            <span class="sw-pitch-list" id="target-pitch-list">C# · F# · A</span>
+          </div>
+          <div class="sw-track-axis" id="target-track-axis" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN (OR BOTTOM THUMB ZONE ON MOBILE): HUD + Tactile Input -->
+      <section class="sw-console-column" aria-label="Tactile Voice-Leading Console">
+        <!-- Telemetry HUD Bar -->
+        <div class="sw-hud-bar" id="hud-bar">
+          <div class="sw-hud-metric" id="hud-moves-wrap">
+            <span class="sw-hud-label">Moves</span>
+            <span class="sw-hud-val" id="hud-moves">3 / 8</span>
+          </div>
+          <div class="sw-hud-divider" aria-hidden="true"></div>
+          <div class="sw-hud-metric">
+            <span class="sw-hud-label">Par</span>
+            <span class="sw-hud-val" id="hud-par">5</span>
+          </div>
+          <div class="sw-hud-divider" aria-hidden="true"></div>
+          <div class="sw-hud-metric">
+            <span class="sw-hud-label">Travel</span>
+            <span class="sw-hud-val" id="hud-semitones">3 st</span>
+          </div>
+          <button type="button" class="sw-undo-btn" id="btn-undo" aria-label="Undo last move">
+            <span class="sw-icon-sm" id="icon-undo"></span>
+            <span>Undo</span>
+          </button>
+        </div>
+
+        <!-- Floating Rejection / Feedback Toast -->
+        <div class="sw-toast-slot" aria-live="assertive">
+          <div class="sw-feedback-pill" id="feedback-pill" hidden>
+            <span class="sw-feedback-dot" aria-hidden="true"></span>
+            <span id="feedback-text">Not a recognized chord — 0 moves used</span>
+          </div>
+        </div>
+
+        <!-- Mode Toggle + Voice Selector Chips -->
+        <div class="sw-console-toolbar">
+          <div class="sw-view-switch" role="tablist" aria-label="Input mode">
+            <button type="button" class="sw-view-tab is-active" id="tab-rail" role="tab" aria-selected="true" data-input-view="rail">
+              <span class="sw-icon-sm" id="icon-tab-rail"></span>
+              <span>Rail</span>
+            </button>
+            <button type="button" class="sw-view-tab" id="tab-clock" role="tab" aria-selected="false" data-input-view="clock">
+              <span class="sw-icon-sm" id="icon-tab-clock"></span>
+              <span>Clock</span>
+            </button>
+          </div>
+          <div class="sw-voice-chips" id="voice-chips" role="group" aria-label="Select voice to move"></div>
+        </div>
+
+        <!-- Interactive Input Stage: Linear Chromatic Rail OR 12-Tone Clock -->
+        <div class="sw-input-stage" id="input-stage">
+          <!-- 2A: Wrapping Linear Chromatic Rail -->
+          <div class="sw-rail-view" id="rail-view">
+            <div class="sw-rail-header-labels">
+              <span class="sw-rail-edge-tag">← Wrap</span>
+              <span class="sw-rail-current-tag">Active: <strong id="rail-active-chord">Db Maj</strong></span>
+              <span class="sw-rail-edge-tag">Wrap →</span>
+            </div>
+            <div class="sw-rail-track" id="rail-track" role="application" aria-label="Wrapping 16-slot chromatic rail">
+              <div class="sw-rail-slots" id="rail-slots"></div>
+              <div class="sw-rail-pucks" id="rail-pucks"></div>
+            </div>
+          </div>
+
+          <!-- 2B: 12-Tone Chromatic Clock -->
+          <div class="sw-clock-view" id="clock-view" hidden>
+            <div class="sw-clock-wrap">
+              <svg class="sw-clock-svg" id="clock-svg" viewBox="0 0 300 300" role="img" aria-label="12-tone chromatic pitch-class clock">
+                <g id="clock-backdrop"></g>
+                <g id="clock-lava-layer"></g>
+                <polygon id="clock-target-poly" class="sw-clock-target-poly" points=""></polygon>
+                <polygon id="clock-active-poly" class="sw-clock-active-poly" points=""></polygon>
+                <g id="clock-target-dots"></g>
+                <g id="clock-labels"></g>
+                <g id="clock-vertices"></g>
+                <g class="sw-clock-center">
+                  <text x="150" y="143" text-anchor="middle" class="sw-clock-chord-text" id="clock-center-chord">Db Maj</text>
+                  <text x="150" y="163" text-anchor="middle" class="sw-clock-match-text" id="clock-center-match">Match 1/3</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Precision Thumb Stepper Dock -->
+        <div class="sw-stepper-dock" id="stepper-dock" role="group" aria-label="Slide selected voice">
+          <button type="button" class="sw-step-btn" data-delta="-2" id="step-btn-m2">
+            <span class="sw-step-delta">-2</span>
+            <span class="sw-step-note" id="step-note-m2">B</span>
+            <span class="sw-step-lock-badge" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="sw-step-btn" data-delta="-1" id="step-btn-m1">
+            <span class="sw-step-delta">-1</span>
+            <span class="sw-step-note" id="step-note-m1">C</span>
+          </button>
+          <button type="button" class="sw-step-btn" data-delta="1" id="step-btn-p1">
+            <span class="sw-step-delta">+1</span>
+            <span class="sw-step-note" id="step-note-p1">D</span>
+          </button>
+          <button type="button" class="sw-step-btn" data-delta="2" id="step-btn-p2">
+            <span class="sw-step-delta">+2</span>
+            <span class="sw-step-note" id="step-note-p2">D#</span>
+            <span class="sw-step-lock-badge" aria-hidden="true"></span>
+          </button>
+        </div>
+        <p class="sw-desktop-kbd-hint" aria-hidden="true">
+          Shortcuts: <kbd>1</kbd>–<kbd>4</kbd> Voice · <kbd>←</kbd><kbd>→</kbd> ±1 · <kbd>Shift</kbd>+<kbd>←</kbd><kbd>→</kbd> ±2 · <kbd>Z</kbd> Undo · <kbd>M</kbd> Rail/Clock
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL 1: Harmonic Resolution & Post-Game Playback Scrubber -->
+  <div class="sw-modal-backdrop" id="modal-resolve" hidden role="dialog" aria-modal="true" aria-labelledby="resolve-title">
+    <div class="sw-modal sw-modal-resolve">
+      <button type="button" class="sw-modal-close" data-close-modal="modal-resolve" aria-label="Close resolution screen">✕</button>
+      <div class="sw-resolve-hero">
+        <div class="sw-medal-stage" id="resolve-medal-stage">
+          <img src="../../assets/medals/frame-par.svg" alt="" class="sw-medal-bezel" id="resolve-medal-frame">
+          <img src="../../assets/medals/medal-par-pure.png" alt="Par Pure Medal" class="sw-medal-img" id="resolve-medal-img">
+        </div>
+        <span class="sw-rank-pill" id="resolve-rank-pill" data-rank="par">PAR PURE</span>
+        <h2 class="sw-modal-title" id="resolve-title">Harmonic Resolution</h2>
+        <p class="sw-resolve-subtitle" id="resolve-subtitle">Puzzle #88 · Half-Steps Only · C Maj → F# Min</p>
+      </div>
+
+      <!-- Triad Telemetry Card -->
+      <div class="sw-triad-card">
+        <div class="sw-triad-cell">
+          <span class="sw-triad-label">Moves</span>
+          <strong class="sw-triad-val" id="res-moves">5 / 5</strong>
+          <span class="sw-triad-sub" id="res-par-diff">On Par</span>
+        </div>
+        <div class="sw-triad-cell">
+          <span class="sw-triad-label">Travel</span>
+          <strong class="sw-triad-val" id="res-semitones">5 st</strong>
+          <span class="sw-triad-sub" id="res-st-sub">Optimal 5 st</span>
+        </div>
+        <div class="sw-triad-cell">
+          <span class="sw-triad-label">Undos</span>
+          <strong class="sw-triad-val" id="res-undos">0</strong>
+          <span class="sw-triad-sub" id="res-undo-sub">Clean Solve</span>
+        </div>
+      </div>
+
+      <!-- Playback Scrubber & Optimal Comparison -->
+      <div class="sw-replay-card">
+        <div class="sw-replay-controls">
+          <button type="button" class="sw-btn-primary sw-btn-play" id="btn-play-ladder">
+            <span class="sw-icon-sm" id="icon-play-btn"></span>
+            <span id="play-btn-label">Play My Ladder</span>
+          </button>
+          <button type="button" class="sw-btn-secondary" id="btn-compare-optimal" aria-pressed="false">
+            <span class="sw-icon-sm" id="icon-compare-btn"></span>
+            <span id="compare-btn-label">Compare Optimal Par</span>
+          </button>
+        </div>
+
+        <div class="sw-replay-progress-track" aria-hidden="true">
+          <div class="sw-replay-progress-fill" id="replay-progress-fill"></div>
+        </div>
+
+        <div class="sw-replay-columns" id="replay-columns">
+          <div class="sw-replay-col">
+            <div class="sw-replay-col-head">
+              <span>Your Progression</span>
+              <span class="sw-mono-tag" id="replay-user-meta">5 moves · 5 st</span>
+            </div>
+            <ol class="sw-replay-list" id="replay-user-list"></ol>
+          </div>
+          <div class="sw-replay-col" id="replay-optimal-col" hidden>
+            <div class="sw-replay-col-head">
+              <span>Optimal Par Route</span>
+              <span class="sw-mono-tag" id="replay-opt-meta">5 moves · 5 st</span>
+            </div>
+            <ol class="sw-replay-list" id="replay-opt-list"></ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="sw-modal-footer-actions">
+        <button type="button" class="sw-btn-primary sw-btn-full" id="btn-open-share-from-resolve">
+          <span class="sw-icon-sm" id="icon-res-share"></span>
+          <span>Share Scorecard</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Viral Spoiler-Free Share Modal -->
+  <div class="sw-modal-backdrop" id="modal-share" hidden role="dialog" aria-modal="true" aria-labelledby="share-title">
+    <div class="sw-modal sw-modal-compact">
+      <button type="button" class="sw-modal-close" data-close-modal="modal-share" aria-label="Close share modal">✕</button>
+      <h2 class="sw-modal-title" id="share-title">Share Scorecard</h2>
+      <p class="sw-modal-lead">Spoiler-free voice-leading grid ready for text, Discord, or social.</p>
+      <pre class="sw-share-preview" id="share-preview-text"></pre>
+      <button type="button" class="sw-btn-primary sw-btn-full" id="btn-copy-share">
+        <span class="sw-icon-sm" id="icon-copy-share"></span>
+        <span id="copy-share-label">Copy Scorecard</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL 3: 15-Second Visual How-to-Play Modal -->
+  <div class="sw-modal-backdrop" id="modal-howto" hidden role="dialog" aria-modal="true" aria-labelledby="howto-title">
+    <div class="sw-modal sw-modal-howto">
+      <button type="button" class="sw-modal-close" data-close-modal="modal-howto" aria-label="Close how to play">✕</button>
+      <h2 class="sw-modal-title" id="howto-title">How to Play STEPWISE</h2>
+      <p class="sw-modal-lead">Morph the Start Chord into the Target Chord in as few steps as possible. Play silently or with sound.</p>
+
+      <div class="sw-howto-frames">
+        <article class="sw-howto-card">
+          <div class="sw-howto-num">1</div>
+          <svg class="sw-howto-diagram" viewBox="0 0 240 66" aria-hidden="true">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--sw-voice-2)"/>
+              </marker>
+            </defs>
+            <rect x="8" y="10" width="224" height="46" rx="10" fill="var(--sw-bg-recessed)" stroke="var(--sw-border-subtle)"/>
+            <line x1="36" y1="33" x2="204" y2="33" stroke="var(--sw-border-strong)" stroke-width="2" stroke-dasharray="3 3"/>
+            <circle cx="52" cy="33" r="12" fill="var(--sw-voice-1)"/>
+            <text x="52" y="37" text-anchor="middle" fill="var(--sw-voice-1-on)" font-size="11" font-weight="700" font-family="var(--sw-font-mono)">C</text>
+            <circle cx="110" cy="33" r="12" fill="var(--sw-voice-2)" fill-opacity="0.35" stroke="var(--sw-voice-2)" stroke-dasharray="3 2"/>
+            <path d="M122 25 C132 16, 140 16, 148 25" fill="none" stroke="var(--sw-voice-2)" stroke-width="2" marker-end="url(#arrow)"/>
+            <circle cx="152" cy="33" r="12" fill="var(--sw-voice-2)"/>
+            <text x="152" y="37" text-anchor="middle" fill="var(--sw-voice-2-on)" font-size="11" font-weight="700" font-family="var(--sw-font-mono)">F</text>
+            <circle cx="192" cy="33" r="12" fill="var(--sw-voice-3)"/>
+            <text x="192" y="37" text-anchor="middle" fill="var(--sw-voice-3-on)" font-size="11" font-weight="700" font-family="var(--sw-font-mono)">G</text>
+            <text x="135" y="15" text-anchor="middle" fill="var(--sw-voice-2)" font-size="10" font-weight="700" font-family="var(--sw-font-mono)">+1</text>
+          </svg>
+          <div class="sw-howto-copy">
+            <strong>Slide 1 voice ±1–2 semitones</strong>
+            <span>Tap a voice puck and nudge it by step. Only one voice moves per turn.</span>
+          </div>
+        </article>
+
+        <article class="sw-howto-card">
+          <div class="sw-howto-num">2</div>
+          <svg class="sw-howto-diagram" viewBox="0 0 240 66" aria-hidden="true">
+            <rect x="8" y="8" width="106" height="50" rx="10" fill="var(--sw-valid-surface)" stroke="var(--sw-valid-border)"/>
+            <text x="61" y="30" text-anchor="middle" fill="var(--sw-valid-text)" font-size="13" font-weight="700" font-family="var(--sw-font-display)">Csus4 ✓</text>
+            <text x="61" y="46" text-anchor="middle" fill="var(--sw-valid-text)" font-size="10" font-family="var(--sw-font-sans)">Snaps onto ladder</text>
+            <rect x="126" y="8" width="106" height="50" rx="10" fill="var(--sw-invalid-surface)" stroke="var(--sw-invalid-border)"/>
+            <text x="179" y="30" text-anchor="middle" fill="var(--sw-invalid-text)" font-size="12" font-weight="700" font-family="var(--sw-font-display)">C–C#–G ✗</text>
+            <text x="179" y="46" text-anchor="middle" fill="var(--sw-invalid-text)" font-size="10" font-family="var(--sw-font-sans)">Bounces · 0 moves</text>
+          </svg>
+          <div class="sw-howto-copy">
+            <strong>Every step must be a real chord</strong>
+            <span>Unrecognized clusters bounce back harmlessly without costing a move.</span>
+          </div>
+        </article>
+
+        <article class="sw-howto-card">
+          <div class="sw-howto-num">3</div>
+          <svg class="sw-howto-diagram" viewBox="0 0 240 66" aria-hidden="true">
+            <rect x="8" y="8" width="224" height="50" rx="10" fill="var(--sw-target-match-tint)" stroke="var(--sw-target-match-ring)"/>
+            <circle cx="48" cy="33" r="11" fill="var(--sw-voice-1)" stroke="var(--sw-target-match-ring)" stroke-width="3"/>
+            <circle cx="90" cy="33" r="11" fill="var(--sw-voice-2)" stroke="var(--sw-target-match-ring)" stroke-width="3"/>
+            <circle cx="132" cy="33" r="11" fill="var(--sw-voice-3)" stroke="var(--sw-target-match-ring)" stroke-width="3"/>
+            <text x="186" y="30" text-anchor="middle" fill="var(--sw-target-match-text)" font-size="13" font-weight="700" font-family="var(--sw-font-display)">Par 5</text>
+            <text x="186" y="46" text-anchor="middle" fill="var(--sw-target-match-text)" font-size="10" font-family="var(--sw-font-mono)">3/3 Gold</text>
+          </svg>
+          <div class="sw-howto-copy">
+            <strong>Match every target note in Par</strong>
+            <span>Gold rings mark target pitch matches. Beat Par for Eagle; zero undos earns Par Pure.</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="sw-howto-legend">
+        <span class="sw-legend-item"><i class="sw-legend-swatch sw-swatch-gold"></i>Target Pitch Match</span>
+        <span class="sw-legend-item"><i class="sw-legend-swatch sw-swatch-lava"></i>Lava Blocked Note</span>
+        <span class="sw-legend-item"><i class="sw-legend-swatch sw-swatch-diamond"></i>Checkpoint Required</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL / DRAWER 4: Stats, Streak, Medal Shelf & Preferences -->
+  <div class="sw-drawer-backdrop" id="drawer-stats" hidden role="dialog" aria-modal="true" aria-labelledby="stats-title">
+    <aside class="sw-drawer">
+      <div class="sw-drawer-header">
+        <h2 class="sw-modal-title" id="stats-title">Stats &amp; Preferences</h2>
+        <button type="button" class="sw-modal-close" data-close-modal="drawer-stats" aria-label="Close stats drawer">✕</button>
+      </div>
+
+      <!-- 4-Cell KPI Strip -->
+      <div class="sw-kpi-grid">
+        <div class="sw-kpi-cell">
+          <strong class="sw-kpi-val">42</strong>
+          <span class="sw-kpi-label">Played</span>
+        </div>
+        <div class="sw-kpi-cell">
+          <strong class="sw-kpi-val">98%</strong>
+          <span class="sw-kpi-label">Win %</span>
+        </div>
+        <div class="sw-kpi-cell">
+          <strong class="sw-kpi-val">14</strong>
+          <span class="sw-kpi-label">Streak</span>
+        </div>
+        <div class="sw-kpi-cell">
+          <strong class="sw-kpi-val">19</strong>
+          <span class="sw-kpi-label">Best</span>
+        </div>
+      </div>
+
+      <!-- Golf Score Distribution -->
+      <div class="sw-drawer-section">
+        <h3 class="sw-section-label">Golf Distribution</h3>
+        <div class="sw-dist-bars">
+          <div class="sw-dist-row"><span class="sw-dist-key">Eagle</span><div class="sw-dist-track"><div class="sw-dist-fill is-eagle" style="width: 18%;">4</div></div></div>
+          <div class="sw-dist-row"><span class="sw-dist-key">Par Pure</span><div class="sw-dist-track"><div class="sw-dist-fill is-par is-highlight" style="width: 58%;">13</div></div></div>
+          <div class="sw-dist-row"><span class="sw-dist-key">Par</span><div class="sw-dist-track"><div class="sw-dist-fill is-par" style="width: 68%;">15</div></div></div>
+          <div class="sw-dist-row"><span class="sw-dist-key">+1</span><div class="sw-dist-track"><div class="sw-dist-fill is-solved" style="width: 34%;">6</div></div></div>
+          <div class="sw-dist-row"><span class="sw-dist-key">+2</span><div class="sw-dist-track"><div class="sw-dist-fill is-solved" style="width: 14%;">2</div></div></div>
+          <div class="sw-dist-row"><span class="sw-dist-key">+3</span><div class="sw-dist-track"><div class="sw-dist-fill is-solved" style="width: 9%;">1</div></div></div>
+        </div>
+      </div>
+
+      <!-- Medal Collection Shelf -->
+      <div class="sw-drawer-section">
+        <h3 class="sw-section-label">Medals Earned</h3>
+        <div class="sw-medal-shelf">
+          <div class="sw-shelf-item"><img src="../../assets/medals/medal-eagle.png" alt="Eagle"><span>×4</span></div>
+          <div class="sw-shelf-item"><img src="../../assets/medals/medal-par-pure.png" alt="Par Pure"><span>×13</span></div>
+          <div class="sw-shelf-item"><img src="../../assets/medals/medal-par.png" alt="Par"><span>×15</span></div>
+          <div class="sw-shelf-item"><img src="../../assets/medals/medal-solved.png" alt="Solved"><span>×9</span></div>
+          <div class="sw-shelf-item"><img src="../../assets/medals/medal-half-step-master.png" alt="Half-Step Master"><span>×5</span></div>
+          <div class="sw-shelf-item"><img src="../../assets/medals/medal-four-voice-virtuoso.png" alt="Four-Voice Virtuoso"><span>×3</span></div>
+        </div>
+      </div>
+
+      <!-- Preferences -->
+      <div class="sw-drawer-section">
+        <h3 class="sw-section-label">Settings</h3>
+        <div class="sw-pref-row">
+          <div>
+            <strong>Theme</strong>
+            <span>Archival Paper or Midnight Studio</span>
+          </div>
+          <div class="sw-seg-ctrl" role="group" aria-label="Theme preference">
+            <button type="button" class="sw-seg-btn is-active" data-pref-theme="light">Light</button>
+            <button type="button" class="sw-seg-btn" data-pref-theme="dark">Dark</button>
+          </div>
+        </div>
+        <div class="sw-pref-row">
+          <div>
+            <strong>Default Input View</strong>
+            <span>Chromatic Rail or 12-Tone Clock</span>
+          </div>
+          <div class="sw-seg-ctrl" role="group" aria-label="Input preference">
+            <button type="button" class="sw-seg-btn is-active" data-pref-input="rail">Rail</button>
+            <button type="button" class="sw-seg-btn" data-pref-input="clock">Clock</button>
+          </div>
+        </div>
+        <div class="sw-pref-row">
+          <div>
+            <strong>Note Spelling</strong>
+            <span>Prefer Sharps (#) or Flats (b)</span>
+          </div>
+          <div class="sw-seg-ctrl" role="group" aria-label="Accidental spelling">
+            <button type="button" class="sw-seg-btn is-active" data-pref-spelling="sharp">Sharps #</button>
+            <button type="button" class="sw-seg-btn" data-pref-spelling="flat">Flats b</button>
+          </div>
+        </div>
+        <div class="sw-pref-row">
+          <div>
+            <strong>Audio Playback</strong>
+            <span>Silent commute vs. Rhodes synth toggle</span>
+          </div>
+          <div class="sw-seg-ctrl" role="group" aria-label="Audio toggle">
+            <button type="button" class="sw-seg-btn is-active" data-pref-sound="muted">Silent</button>
+            <button type="button" class="sw-seg-btn" data-pref-sound="on">Sound On</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="./preview.js"></script>
+</body>
+</html>
