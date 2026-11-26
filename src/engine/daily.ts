@@ -1,4 +1,5 @@
-// Deterministic UTC-date daily puzzle generator with the Mon–Sun twist cadence.
+// Deterministic calendar-date daily puzzle generator with the Mon–Sun twist cadence.
+// A date key is the player's local calendar day (see todayUtc); everything downstream is pure date math.
 import type { ChordQuality, DailyRule, DailyStepwisePuzzle, NoteSpellingMode, PitchClass, RuleKind } from '../types/stepwise';
 import { chordFromRoot, maskOf, pcName, popcount, rootPosition } from './chords';
 import { solve, type SolveResult } from './solver';
@@ -207,6 +208,14 @@ export function generateDailyPuzzle(dateUtc: string, kindOverride?: RuleKind): D
   throw new Error(`No valid ${kind} puzzle found for ${dateUtc}`);
 }
 
+/**
+ * Today's puzzle date key: the player's LOCAL calendar date (rolls over at local midnight, like the
+ * Reharm Daily hub). Puzzle numbers and generation then count calendar days (parseUtc on the
+ * YYYY-MM-DD key), so DST-length days never skew them. Name kept for the date-key helpers above.
+ */
 export function todayUtc(now: Date = new Date()): string {
-  return toUtcDateString(now);
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }

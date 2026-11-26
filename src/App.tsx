@@ -5,7 +5,8 @@ import { generateDailyPuzzle, ruleDetail, ruleLabel, todayUtc } from './engine/d
 import { allowedDeltas, countTargetMatches, ruleForbiddenPc, ruleMaxStep } from './engine/graph';
 import { checkpointMet, currentPcs, gameReducer, initGame, toProgress, type GameState } from './game/gameState';
 import { bucketFor, buildShareText, buildSummary } from './state/scoring';
-import { displayStreak, loadPrefs, loadProgress, loadStats, recordResult, savePrefs, saveProgress, type Preferences } from './state/storage';
+import { buildDoneRecord, buildProgressRecord, DAILY_HUB_URL, emitDaily, labMoveFor, type DailyStats } from './state/daily';
+import { defaultStore, displayStreak, loadPrefs, loadProgress, loadStats, recordResult, savePrefs, saveProgress, type LifetimeStats, type Preferences } from './state/storage';
 import type { ChordNode, RejectReason, StepDelta } from './types/stepwise';
 import { brandMarkUrl, type IconName } from './ui/assets';
 import { Clock } from './ui/Clock';
@@ -22,7 +23,7 @@ const RULE_ICON: Record<string, IconName> = {
   'four-voice-seventh': 'chromatic-clock',
 };
 
-/** Dev/QA only: ?date=YYYY-MM-DD loads another day's puzzle. Production always plays today (UTC). */
+/** Dev/QA only: ?date=YYYY-MM-DD loads another day's puzzle. Production always plays today (local day). */
 function resolveDate(): string {
   if (import.meta.env.DEV) {
     const q = new URLSearchParams(location.search).get('date');
@@ -30,6 +31,12 @@ function resolveDate(): string {
   }
   return todayUtc();
 }
+
+const dailyStatsOf = (s: LifetimeStats, dateKey: string): DailyStats => ({
+  streak: displayStreak(s, dateKey),
+  bestMoves: s.bestMoves ?? null,
+  played: s.played,
+});
 
 type ModalId = 'resolve' | 'share' | 'howto' | 'stats' | null;
 interface Toast {
@@ -98,7 +105,7 @@ export function App() {
     return () => events.forEach((ev) => window.removeEventListener(ev, unlock, { capture: true }));
   }, []);
 
-  // Roll over to the new daily puzzle after 00:00 UTC (tab left open overnight). Reload when the
+  // Roll over to the new daily puzzle after local midnight (tab left open overnight). Reload when the
   // player returns to the tab, or on a timer unless they are mid-solve. Skipped for ?date= previews.
   const statusRef = useRef(game.status);
   statusRef.current = game.status;
@@ -125,13 +132,21 @@ export function App() {
 
   // ---- Persistence + resolution
   const firstRender = useRef(true);
+  // Reharm Daily hub mirror (`daily:v1:stepwise`): only for today's real puzzle, never ?date= previews.
+  const isToday = dateUtc === todayUtc();
+
   useEffect(() => {
     saveProgress(dateUtc, toProgress(game));
+    if (isToday && game.status === 'playing') {
+      emitDaily(buildProgressRecord(puzzle, game.steps.length, dailyStatsOf(loadStats(), dateUtc)), defaultStore());
+    }
   }, [dateUtc, game]);
 
   useEffect(() => {
     if (!finished) return;
-    setStats(recordResult(dateUtc, summary));
+    const nextStats = recordResult(dateUtc, summary);
+    setStats(nextStats);
+    if (isToday) emitDaily(buildDoneRecord(puzzle, summary, dailyStatsOf(nextStats, dateUtc)), defaultStore());
     if (firstRender.current) {
       setModal('resolve'); // returning visitor: show today's result
       return;
@@ -291,6 +306,20 @@ export function App() {
   return (
     <>
       <div className="sw-shell">
+        {/* Reharm Daily family strip (ReharmLab-Dailys/design/bridge-spec.md §2.2) */}
+        <nav className="daily-bridge-bar" aria-label="Reharm Daily navigation">
+          <a className="daily-back-link" href={DAILY_HUB_URL}>
+            <span aria-hidden="true">←</span>
+            <span>Reharm Daily</span>
+          </a>
+          <a className="daily-ritual-mini" href={DAILY_HUB_URL} aria-label={`Daily progress: ${finished ? 1 : 0} of 1 puzzles played`}>
+            <span className="daily-mini-count">{finished ? 1 : 0}/1 today</span>
+            <span className="daily-mini-dots" aria-hidden="true">
+              <i className={finished ? 'is-done' : undefined} />
+            </span>
+          </a>
+        </nav>
+
         <header className="sw-header" aria-label="Game header">
           <div className="sw-header-left">
             <a href="./" className="sw-brand-lockup" aria-label="STEPWISE Home" onClick={(e) => e.preventDefault()}>
@@ -510,6 +539,7 @@ export function App() {
         summary={summary}
         spelling={spelling}
         playback={playback}
+        labMove={labMoveFor(puzzle, summary)}
         onTogglePlay={togglePlay}
         compare={compare}
         onToggleCompare={() => {

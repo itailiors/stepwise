@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { formatSymbol, respell } from '../engine/chords';
 import { ruleLabel } from '../engine/daily';
 import { DIST_BUCKETS, RANK_LABEL, type DistBucket } from '../state/scoring';
+import { DAILY_SHARE_URL, LAB_CHANGES_URL, labMoveUrl, type LabMove } from '../state/daily';
 import { ALL_MEDALS, type LifetimeStats, type Preferences } from '../state/storage';
 import type { DailyStepwisePuzzle, GolfRank, LadderStep, NoteSpellingMode, SolveSummary } from '../types/stepwise';
 import { frameUrl, MEDAL_NAMES, medalUrl, type FrameId } from './assets';
@@ -101,6 +102,7 @@ export function ResolveModal({
   summary,
   spelling,
   playback,
+  labMove,
   onTogglePlay,
   compare,
   onToggleCompare,
@@ -112,6 +114,7 @@ export function ResolveModal({
   summary: SolveSummary;
   spelling: NoteSpellingMode;
   playback: PlaybackState | null;
+  labMove: LabMove | null;
   onTogglePlay(mode: PlaybackMode): void;
   compare: boolean;
   onToggleCompare(): void;
@@ -215,6 +218,29 @@ export function ResolveModal({
             <Icon name="share" small />
             <span>Share Scorecard</span>
           </button>
+          <aside className="daily-next-card" aria-label="Next daily puzzle">
+            <div className="daily-next-info">
+              <span className="daily-next-eyebrow">Today’s Sheet</span>
+              <strong className="daily-next-title">STEPWISE complete</strong>
+              <a className="daily-next-practice" href={LAB_CHANGES_URL}>
+                Practice: Make the&nbsp;Changes&nbsp;↗
+              </a>
+            </div>
+            <a className="daily-next-cta" href={DAILY_SHARE_URL}>
+              Share Combined Card →
+            </a>
+          </aside>
+          {labMove ? (
+            <a className="daily-lab-chip" href={labMoveUrl(labMove)} aria-label={`Learn ${labMove.label} in Reharm Lab (opens Reharm Lab)`}>
+              <span className="daily-lab-mark" aria-hidden="true">
+                RL
+              </span>
+              <span className="daily-lab-title">Learn {labMove.label} in Reharm Lab</span>
+              <span className="daily-lab-action" aria-hidden="true">
+                Open Lab ↗
+              </span>
+            </a>
+          ) : null}
         </div>
       </div>
     </Backdrop>

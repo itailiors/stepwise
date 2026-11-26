@@ -252,3 +252,224 @@
     animation: none !important;
   }
 }
+
+/* =========================================================================
+   Reharm Daily bridge (ReharmLab-Dailys/design/bridge-spec.md §2). Tokens only,
+   so it follows STEPWISE's drafting-paper / dark themes.
+   ========================================================================= */
+:root {
+  --bridge-bg: var(--sw-bg-canvas);
+  --bridge-elevated: var(--sw-bg-elevated);
+  --bridge-border: var(--sw-border-subtle);
+  --bridge-text: var(--sw-text-primary);
+  --bridge-muted: var(--sw-text-secondary);
+  --bridge-accent: var(--sw-voice-1);
+  --bridge-accent-ink: var(--sw-voice-1-on);
+  --bridge-font: var(--sw-font-sans);
+  --bridge-mono: var(--sw-font-mono);
+}
+
+.daily-bridge-bar {
+  flex: none;
+  height: 38px;
+  margin: 0 calc(-1 * var(--sw-space-3));
+  padding: 0 var(--sw-space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bridge-bg);
+  border-bottom: 1px solid var(--bridge-border);
+  font-family: var(--bridge-font);
+  font-size: 12.5px;
+}
+
+.daily-bridge-bar a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  text-decoration: none;
+  border-radius: var(--sw-radius-sm);
+}
+
+/* 44px hit area without growing the 38px strip. */
+.daily-bridge-bar a::before {
+  content: '';
+  position: absolute;
+  inset: -3px -6px;
+}
+
+.daily-bridge-bar a:focus-visible {
+  outline: 2px solid var(--bridge-accent);
+  outline-offset: -4px;
+}
+
+.daily-back-link {
+  color: var(--bridge-accent);
+  font-weight: 600;
+}
+
+.daily-back-link:hover {
+  text-decoration: underline;
+}
+
+.daily-ritual-mini {
+  color: var(--bridge-muted);
+  font-family: var(--bridge-mono);
+  font-size: 11px;
+}
+
+.daily-mini-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.daily-mini-dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--bridge-muted);
+}
+
+.daily-mini-dots i.is-done {
+  background: var(--bridge-accent);
+  border-color: var(--bridge-accent);
+}
+
+.sw-modal-footer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sw-space-3);
+}
+
+.daily-next-card {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: var(--bridge-elevated);
+  border: 1px solid var(--bridge-border);
+  border-radius: var(--sw-radius-lg);
+  font-family: var(--bridge-font);
+}
+
+.daily-next-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+@media (min-width: 421px) {
+  .daily-next-card {
+    flex-wrap: nowrap;
+  }
+
+  .daily-next-info {
+    flex: 1 1 auto;
+  }
+}
+
+.daily-next-eyebrow {
+  font-family: var(--bridge-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bridge-muted);
+}
+
+.daily-next-title {
+  color: var(--bridge-text);
+  font-size: 14px;
+}
+
+.daily-next-practice {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  color: var(--bridge-muted);
+  font-size: 12.5px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.daily-next-practice:hover {
+  color: var(--bridge-text);
+}
+
+.daily-next-cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--sw-radius-md);
+  background: var(--bridge-accent);
+  color: var(--bridge-accent-ink);
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.daily-next-cta:focus-visible {
+  outline: 2px solid var(--bridge-text);
+  outline-offset: 2px;
+}
+
+/* "Learn <move> in Reharm Lab" chip (bridge-spec.md §3): Reharm Lab parchment in every theme. */
+.daily-lab-chip {
+  min-height: 48px;
+  padding: 6px 12px 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #FBF3DF;
+  border: 1.8px solid #1E2A78;
+  border-radius: 12px;
+  color: #1E2A78;
+  text-decoration: none;
+}
+
+.daily-lab-chip:hover {
+  background: #F6EBCF;
+}
+
+.daily-lab-chip:focus-visible {
+  outline: 3px solid var(--bridge-accent);
+  outline-offset: 2px;
+}
+
+.daily-lab-mark {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid #1E2A78;
+  border-radius: 6px;
+  font-family: var(--sw-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.daily-lab-title {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--sw-font-display);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.daily-lab-action {
+  flex: none;
+  color: #A52213;
+  font-family: var(--sw-font-sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}

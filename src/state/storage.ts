@@ -9,7 +9,7 @@ export interface KV {
   setItem(key: string, value: string): void;
 }
 
-function defaultStore(): KV | null {
+export function defaultStore(): KV | null {
   try {
     return typeof localStorage === 'undefined' ? null : localStorage;
   } catch {
@@ -80,6 +80,8 @@ export interface LifetimeStats {
   maxStreak: number;
   lastWonDate: string | null;
   lastRecordedDate: string | null;
+  /** Fewest moves in any solved puzzle (feeds the hub's bestScore). */
+  bestMoves: number | null;
   distribution: Record<DistBucket, number>;
   medals: Record<MedalId, number>;
 }
@@ -94,6 +96,7 @@ export function emptyStats(): LifetimeStats {
     maxStreak: 0,
     lastWonDate: null,
     lastRecordedDate: null,
+    bestMoves: null,
     distribution: Object.fromEntries(DIST_BUCKETS.map((b) => [b, 0])) as Record<DistBucket, number>,
     medals: Object.fromEntries(ALL_MEDALS.map((m) => [m, 0])) as Record<MedalId, number>,
   };
@@ -130,6 +133,7 @@ export function applyResult(stats: LifetimeStats, dateUtc: string, summary: Solv
     next.currentStreak = stats.lastWonDate === addDaysUtc(dateUtc, -1) ? stats.currentStreak + 1 : 1;
     next.maxStreak = Math.max(next.maxStreak, next.currentStreak);
     next.lastWonDate = dateUtc;
+    next.bestMoves = stats.bestMoves === null || stats.bestMoves === undefined ? summary.movesUsed : Math.min(stats.bestMoves, summary.movesUsed);
     next.medals[summary.medalId] += 1;
     if (summary.challengeMedalId) next.medals[summary.challengeMedalId] += 1;
   } else {
