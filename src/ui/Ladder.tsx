@@ -1,7 +1,7 @@
 // Left column: Start Anchor -> committed ladder rows + SVG voice threads -> Target Goal Bar.
 // Every track shares xPct = ((pc + 0.5) / 12) * 100 (coordinate alignment invariant).
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { BLACK_PCS, formatSymbol, pcName, QUALITY_DEFS, respell } from '../engine/chords';
+import { BLACK_PCS, formatSymbol, pcName, QUALITY_DEFS, respell, spellingFor } from '../engine/chords';
 import { ruleForbiddenPc } from '../engine/graph';
 import type { ChordNode, DailyStepwisePuzzle, LadderStep, NoteSpellingMode, PitchClass, VoiceMove } from '../types/stepwise';
 import { Icon } from './Icon';
@@ -107,7 +107,8 @@ function ThreadConnector({
 }
 
 function pitchList(chord: ChordNode, spelling: NoteSpellingMode): string {
-  return chord.pitchClasses.map((pc) => pcName(pc, spelling)).join(chord.pitchClasses.length >= 4 ? '·' : ' · ');
+  const s = spellingFor(spelling, chord);
+  return chord.pitchClasses.map((pc) => pcName(pc, s)).join(chord.pitchClasses.length >= 4 ? '·' : ' · ');
 }
 
 export interface LadderProps {
@@ -180,7 +181,8 @@ export function Ladder({ puzzle, steps, spelling, commitNonce, checkpointMet, so
         <div className="sw-ladder-list">
           {steps.length === 0 ? (
             <div className="sw-ladder-empty">
-              Select a voice below and tap <strong>+1 / -1</strong> (or drag a puck) to build your ladder.
+              Select a voice below and tap <strong>+1 / -1</strong> (or drag a puck) to build your ladder. Every step must land on a
+              real chord (a triad or 7th chord); anything else bounces back and costs no move.
             </div>
           ) : (
             steps.map((step, i) => {
@@ -246,7 +248,7 @@ export function Ladder({ puzzle, steps, spelling, commitNonce, checkpointMet, so
           <AxisGrid lavaPc={lavaPc} />
           {puzzle.target.pitchClasses.map((pc) => (
             <div key={pc} className={`sw-target-beacon${activeSet.has(pc) ? ' is-lit' : ''}`} style={{ left: xPct(pc) }}>
-              {pcName(pc, spelling)}
+              {pcName(pc, spellingFor(spelling, puzzle.target))}
             </div>
           ))}
         </div>

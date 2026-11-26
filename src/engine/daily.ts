@@ -120,7 +120,7 @@ export function ruleDetail(rule: DailyRule, spelling: NoteSpellingMode = 'sharp'
     case 'lava-note': {
       const n = pcName(rule.forbiddenPc, 'sharp');
       const f = pcName(rule.forbiddenPc, 'flat');
-      const name = n === f ? n : spelling === 'flat' ? `${f} / ${n}` : `${n} / ${f}`;
+      const name = n === f ? n : spelling === 'sharp' ? `${n} / ${f}` : `${f} / ${n}`;
       return `Lava Note Hazard: Pitch class ${name} is blocked today. Detour around it in ±1 or ±2 steps.`;
     }
     case 'checkpoint-quality':

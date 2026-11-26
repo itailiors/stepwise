@@ -8,8 +8,31 @@ export const BLACK_PCS: ReadonlySet<number> = new Set([1, 3, 6, 8, 10]);
 
 export const mod12 = (n: number): PitchClass => ((((n % 12) + 12) % 12) as PitchClass);
 
+/** 'auto' without a chord to go by falls back to flats (Eb, Ab, Bb are the common spellings). */
 export function pcName(pc: number, spelling: NoteSpellingMode = 'sharp'): string {
-  return (spelling === 'flat' ? FLAT_NAMES : SHARP_NAMES)[mod12(pc)];
+  return (spelling === 'sharp' ? SHARP_NAMES : FLAT_NAMES)[mod12(pc)];
+}
+
+// Key-signature side of a major key by tonic pc: G D A E B F# use sharps, F Bb Eb Ab Db use flats.
+const SHARP_KEYS: ReadonlySet<number> = new Set([7, 2, 9, 4, 11, 6]);
+const DIM_FAMILY: ReadonlySet<ChordQuality> = new Set(['dim', 'm7b5', 'dim7']);
+const MINOR_FAMILY: ReadonlySet<ChordQuality> = new Set(['minor', 'min7']);
+
+/**
+ * The usual spelling for one chord: major-type chords follow their own key signature (Eb Maj, F# Maj),
+ * minor chords their relative major's (F Min -> Ab, C# Min -> E), diminished chords sharp on black-key
+ * roots (G# Dim) and flat otherwise (E Dim -> Bb).
+ */
+export function chordSpelling(root: number, quality: ChordQuality): 'sharp' | 'flat' {
+  const r = mod12(root);
+  if (DIM_FAMILY.has(quality)) return BLACK_PCS.has(r) ? 'sharp' : 'flat';
+  const tonic = MINOR_FAMILY.has(quality) ? mod12(r + 3) : r;
+  return SHARP_KEYS.has(tonic) ? 'sharp' : 'flat';
+}
+
+/** Resolves the player's preference for one chord ('auto' picks per chord). */
+export function spellingFor(mode: NoteSpellingMode, chord: { root: number; quality: ChordQuality }): 'sharp' | 'flat' {
+  return mode === 'auto' ? chordSpelling(chord.root, chord.quality) : mode;
 }
 
 interface QualityDef {
@@ -105,14 +128,14 @@ export function pickReading(readings: readonly ChordReading[], voice1: number): 
 }
 
 export function formatSymbol(root: number, quality: ChordQuality, spelling: NoteSpellingMode = 'sharp'): string {
-  return QUALITY_DEFS[quality].format(pcName(root, spelling));
+  return QUALITY_DEFS[quality].format(pcName(root, spellingFor(spelling, { root, quality })));
 }
 
 export function makeChordNode(pcs: readonly number[], reading: ChordReading, spelling: NoteSpellingMode = 'sharp'): ChordNode {
   const def = QUALITY_DEFS[reading.quality];
   return {
     id: chordId(pcs),
-    symbol: def.format(pcName(reading.root, spelling)),
+    symbol: formatSymbol(reading.root, reading.quality, spelling),
     quality: reading.quality,
     token: def.token,
     qualityLabel: def.label,

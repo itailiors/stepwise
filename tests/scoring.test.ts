@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { chordFromRoot } from '../src/engine/chords';
+import { chordFromRoot, chordSpelling, formatSymbol } from '../src/engine/chords';
 import { solve } from '../src/engine/solver';
 import { buildShareText, buildSummary, rankFor } from '../src/state/scoring';
-import { applyResult, displayStreak, emptyStats, loadPrefs, loadProgress, saveProgress, type KV } from '../src/state/storage';
+import { applyResult, displayStreak, emptyStats, loadPrefs, loadProgress, PREFS_KEY, saveProgress, type KV } from '../src/state/storage';
 import type { DailyRule, DailyStepwisePuzzle } from '../src/types/stepwise';
 
 function memStore(): KV {
@@ -53,9 +53,10 @@ describe('share card', () => {
     const lines = text.split('\n');
     expect(lines[0]).toBe('🪜 STEPWISE #88 (Half-Steps Only)');
     expect(lines[1]).toBe('C Maj ──▶ F# Min | Par 5');
-    expect(lines).toHaveLength(2 + 5 + 1);
+    expect(lines).toHaveLength(2 + 5 + 2);
     for (const row of lines.slice(2, 7)) expect(row).toMatch(/^[⬜🟩]{3}  \([+-]1\)$/u);
-    expect(lines.at(-1)).toBe('Score: 5 moves · 5 semitones (⛳ PAR PURE · 0 undos)');
+    expect(lines.at(-2)).toBe('Score: 5 moves · 5 semitones (⛳ PAR PURE · 0 undos)');
+    expect(lines.at(-1)).toBe('https://itailiors.github.io/stepwise/');
     expect(text).not.toMatch(/Csus|Dim|Aug/); // spoiler-free
   });
 
@@ -66,12 +67,33 @@ describe('share card', () => {
   });
 });
 
+describe('auto spelling', () => {
+  // Playtest: "D# Maj (D# · G · A#)" and "F Min (F · G# · C)" read wrong to a first-time player.
+  it('spells chords the way they are usually written', () => {
+    expect(formatSymbol(3, 'major', 'auto')).toBe('Eb Maj');
+    expect(chordSpelling(5, 'minor')).toBe('flat'); // F Min -> Ab
+    expect(formatSymbol(6, 'major', 'auto')).toBe('F# Maj');
+    expect(formatSymbol(1, 'minor', 'auto')).toBe('C# Min');
+    expect(formatSymbol(8, 'dim', 'auto')).toBe('G# Dim');
+    expect(chordSpelling(4, 'dim')).toBe('flat'); // E Dim -> Bb
+    expect(formatSymbol(10, 'dom7', 'auto')).toBe('Bb7');
+  });
+});
+
 describe('storage', () => {
   it('round-trips progress and defaults prefs to light', () => {
     const store = memStore();
     saveProgress('2027-01-01', { moves: [{ voiceIndex: 0, delta: 1 }], undos: 1, invalidAttempts: 0, status: 'playing' }, store);
     expect(loadProgress('2027-01-01', store)!.moves).toHaveLength(1);
-    expect(loadPrefs(store)).toMatchObject({ inputView: 'rail', noteSpelling: 'sharp', soundEnabled: false });
+    expect(loadPrefs(store)).toMatchObject({ inputView: 'rail', noteSpelling: 'auto', soundEnabled: false });
+  });
+
+  it('treats an old default "sharp" save as auto, but keeps an explicit choice', () => {
+    const store = memStore();
+    store.setItem(PREFS_KEY, JSON.stringify({ theme: 'light', noteSpelling: 'sharp' }));
+    expect(loadPrefs(store).noteSpelling).toBe('auto');
+    store.setItem(PREFS_KEY, JSON.stringify({ theme: 'light', noteSpelling: 'sharp', spellingChosen: true }));
+    expect(loadPrefs(store).noteSpelling).toBe('sharp');
   });
 
   it('tracks streaks, distribution and medals once per day', () => {

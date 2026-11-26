@@ -473,3 +473,53 @@
   font-weight: 700;
   white-space: nowrap;
 }
+
+/* ---- Playtest fixes ---- */
+
+/* Phones: the shell is exactly one screen and the ladder scrolls inside the space left over, so
+   new rungs never push the rail and the ±1/±2 buttons below the fold (they did after 3 moves). */
+@media (max-width: 959px) {
+  .sw-shell {
+    height: 100dvh;
+    min-height: 0;
+  }
+
+  .sw-workspace,
+  .sw-ladder-column {
+    min-height: 0;
+  }
+
+  .sw-ladder-column {
+    flex: 1 1 0;
+  }
+
+  .sw-ladder-scroll {
+    flex: 1 1 0;
+    min-height: 56px;
+    max-height: none;
+  }
+
+  /* The lowest puck tier (top 56px + 48px puck) sat over the note names at 116px. */
+  .sw-rail-track {
+    height: 124px;
+  }
+}
+
+.sw-rule-pill-info {
+  margin-left: 2px;
+  opacity: 0.8;
+  font-size: 0.95em;
+}
+
+.sw-next-puzzle {
+  margin: 0;
+  text-align: center;
+  font-family: var(--sw-font-mono, monospace);
+  font-size: 12.5px;
+  color: var(--sw-text-secondary, inherit);
+}
+
+.sw-next-puzzle strong {
+  font-variant-numeric: tabular-nums;
+  color: var(--sw-text-primary, inherit);
+}

@@ -96,6 +96,9 @@ const RANK_GLYPH: Record<GolfRank, string> = {
   'out-of-moves': '✗',
 };
 
+/** Ends every share card so a pasted result links back to the game. */
+export const STEPWISE_URL = 'https://itailiors.github.io/stepwise/';
+
 export function buildShareText(
   puzzle: DailyStepwisePuzzle,
   summary: SolveSummary,
@@ -121,6 +124,7 @@ export function buildShareText(
     `${start} ──▶ ${target} | Par ${puzzle.parMoves}`,
     ...rows,
     score,
+    STEPWISE_URL,
   ].join('\n');
   return { text, puzzleNumber: puzzle.puzzleNumber, rank: summary.rank };
 }

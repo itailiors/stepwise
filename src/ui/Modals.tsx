@@ -9,6 +9,27 @@ import type { DailyStepwisePuzzle, GolfRank, LadderStep, NoteSpellingMode, Solve
 import { frameUrl, MEDAL_NAMES, medalUrl, type FrameId } from './assets';
 import { Icon } from './Icon';
 
+/** Time left until local midnight, when the next puzzle drops ("HH:MM:SS"). */
+export function untilMidnight(now: Date): string {
+  const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const s = Math.max(0, Math.floor((next.getTime() - now.getTime()) / 1000));
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
+}
+
+function NextPuzzleIn() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <p className="sw-next-puzzle" aria-live="off">
+      Next STEPWISE in <strong>{untilMidnight(now)}</strong>
+    </p>
+  );
+}
+
 export function Backdrop({
   open,
   onClose,
@@ -218,10 +239,11 @@ export function ResolveModal({
             <Icon name="share" small />
             <span>Share Scorecard</span>
           </button>
+          <NextPuzzleIn />
           <aside className="daily-next-card" aria-label="Next daily puzzle">
             <div className="daily-next-info">
               <span className="daily-next-eyebrow">Today’s Sheet</span>
-              <strong className="daily-next-title">STEPWISE complete</strong>
+              <strong className="daily-next-title">STEPWISE done · more puzzles on the sheet</strong>
               <a className="daily-next-practice" href={LAB_CHANGES_URL}>
                 Practice: Make the&nbsp;Changes&nbsp;↗
               </a>
@@ -551,13 +573,13 @@ export function StatsDrawer({
           <div className="sw-pref-row">
             <div>
               <strong>Note Spelling</strong>
-              <span>Prefer Sharps (#) or Flats (b)</span>
+              <span>Auto spells each chord as usually written (Eb Maj, F# Maj)</span>
             </div>
             <Seg
               label="Accidental spelling"
               value={prefs.noteSpelling}
-              options={[['sharp', 'Sharps #'], ['flat', 'Flats b']]}
-              onChange={(noteSpelling) => onPrefs({ noteSpelling })}
+              options={[['auto', 'Auto'], ['sharp', '#'], ['flat', 'b']]}
+              onChange={(noteSpelling) => onPrefs({ noteSpelling, spellingChosen: true })}
             />
           </div>
           <div className="sw-pref-row">

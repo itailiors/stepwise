@@ -24,6 +24,8 @@ export interface RailProps {
   targetPcs: readonly PitchClass[];
   rule: DailyRule;
   spelling: NoteSpellingMode;
+  /** Target notes keep the target chord's spelling (Bb, not A#, when heading to Bb Maj). */
+  targetSpelling?: NoteSpellingMode;
   selectedVoice: number;
   activeLabel: string;
   rejection: Rejection | null;
@@ -50,7 +52,7 @@ export function staggerTiers(pcs: readonly number[]): number[] {
 }
 
 export function Rail(props: RailProps) {
-  const { pcs, targetPcs, rule, spelling, selectedVoice, activeLabel, rejection, disabled, onSelect, onMove } = props;
+  const { pcs, targetPcs, rule, spelling, targetSpelling, selectedVoice, activeLabel, rejection, disabled, onSelect, onMove } = props;
   const trackRef = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const lavaPc = ruleForbiddenPc(rule);
@@ -124,7 +126,7 @@ export function Rail(props: RailProps) {
     if (drag && drag.offset !== 0 && slot === pcs[drag.voice] + drag.offset) cls.push(preview?.ok ? 'is-drop-valid' : 'is-drop-invalid');
     slots.push(
       <div key={slot} className={cls.join(' ')} data-pc={pc}>
-        <span className="sw-rail-slot-label">{pcName(pc, spelling)}</span>
+        <span className="sw-rail-slot-label">{pcName(pc, target.has(pc) && targetSpelling ? targetSpelling : spelling)}</span>
       </div>,
     );
   }

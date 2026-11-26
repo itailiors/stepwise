@@ -161,6 +161,8 @@ export interface Preferences {
   theme: ThemeMode;
   inputView: InputViewMode;
   noteSpelling: NoteSpellingMode;
+  /** True once the player picked a spelling in Settings (older saves wrote 'sharp' as a mere default). */
+  spellingChosen?: boolean;
   soundEnabled: boolean;
 }
 
@@ -179,7 +181,8 @@ export function loadPrefs(store: KV | null = defaultStore()): Preferences {
   return {
     theme: saved.theme === 'dark' || saved.theme === 'light' ? saved.theme : systemTheme(),
     inputView: saved.inputView === 'clock' ? 'clock' : 'rail',
-    noteSpelling: saved.noteSpelling === 'flat' ? 'flat' : 'sharp',
+    noteSpelling: saved.noteSpelling === 'flat' ? 'flat' : saved.noteSpelling === 'sharp' && saved.spellingChosen ? 'sharp' : 'auto',
+    spellingChosen: saved.spellingChosen === true,
     soundEnabled: saved.soundEnabled === true,
   };
 }

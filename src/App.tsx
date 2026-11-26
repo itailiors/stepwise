@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { runPlaybackClock, synth } from './audio/synth';
-import { pcName, respell } from './engine/chords';
+import { pcName, respell, spellingFor } from './engine/chords';
 import { generateDailyPuzzle, ruleDetail, ruleLabel, todayUtc } from './engine/daily';
 import { allowedDeltas, countTargetMatches, ruleForbiddenPc, ruleMaxStep } from './engine/graph';
 import { checkpointMet, currentPcs, gameReducer, initGame, toProgress, type GameState } from './game/gameState';
@@ -53,7 +53,8 @@ export function App() {
   const [stats, setStats] = useState(loadStats);
   const [inputView, setInputView] = useState(prefs.inputView);
   const [modal, setModal] = useState<ModalId>(null);
-  const [ruleOpen, setRuleOpen] = useState(false);
+  // A special-rule day opens its explanation before the first move: playtesters didn't find the pill tappable.
+  const [ruleOpen, setRuleOpen] = useState(() => puzzle.rule.kind !== 'standard' && game.status === 'playing' && game.steps.length === 0);
   const [toast, setToast] = useState<Toast | null>(null);
   const [playback, setPlayback] = useState<PlaybackState | null>(null);
   const [compare, setCompare] = useState(false);
@@ -64,6 +65,8 @@ export function App() {
   const pcs = currentPcs(game);
   const activeChord: ChordNode = game.steps.at(-1)?.chord ?? puzzle.start;
   const activeLabel = respell(activeChord, spelling).symbol;
+  // Single notes (voice chips, rail, steppers) follow the chord currently sounding.
+  const noteSpell = spellingFor(spelling, activeChord);
   const cpMet = checkpointMet(game);
   const matchCount = countTargetMatches(pcs, puzzle.target.pitchClasses);
   const finished = game.status !== 'playing';
@@ -177,11 +180,11 @@ export function App() {
   const rejectMessage = useCallback(
     (reason: RejectReason, toPc: number) =>
       reason === 'lava-blocked'
-        ? `${pcName(toPc, spelling)} is Lava today — detour required`
+        ? `${pcName(toPc, noteSpell)} is Lava today — detour required`
         : reason === 'half-step-locked'
           ? 'Half-Steps Only day — ±2 semitones locked'
-          : 'Not a recognized chord — 0 moves used',
-    [spelling],
+          : 'Not a triad or 7th chord — bounced, 0 moves used',
+    [noteSpell],
   );
 
   useEffect(() => {
@@ -312,8 +315,9 @@ export function App() {
             <span aria-hidden="true">←</span>
             <span>Reharm Daily</span>
           </a>
-          <a className="daily-ritual-mini" href={DAILY_HUB_URL} aria-label={`Daily progress: ${finished ? 1 : 0} of 1 puzzles played`}>
-            <span className="daily-mini-count">{finished ? 1 : 0}/1 today</span>
+          {/* STEPWISE only knows its own result: "1/1 today" read as the whole daily sheet being done. */}
+          <a className="daily-ritual-mini" href={DAILY_HUB_URL} aria-label={`${finished ? 'STEPWISE done today. ' : ''}Open today's Reharm Daily sheet`}>
+            <span className="daily-mini-count">{finished ? 'STEPWISE done' : 'Daily sheet'}</span>
             <span className="daily-mini-dots" aria-hidden="true">
               <i className={finished ? 'is-done' : undefined} />
             </span>
@@ -340,6 +344,7 @@ export function App() {
                 <Icon name={RULE_ICON[rule.kind]} small />
               </span>
               <span>{ruleLabel(rule, spelling)}</span>
+              <span className="sw-rule-pill-info" aria-hidden="true">ⓘ</span>
             </button>
           </div>
           <div className="sw-header-actions">
@@ -458,7 +463,7 @@ export function App() {
                   >
                     <span className="sw-voice-chip-dot" aria-hidden="true" />
                     <span>
-                      V{i + 1}:{pcName(pc, spelling)}
+                      V{i + 1}:{pcName(pc, noteSpell)}
                     </span>
                   </button>
                 ))}
@@ -471,7 +476,8 @@ export function App() {
                   pcs={pcs}
                   targetPcs={puzzle.target.pitchClasses}
                   rule={rule}
-                  spelling={spelling}
+                  spelling={noteSpell}
+                  targetSpelling={spellingFor(spelling, puzzle.target)}
                   selectedVoice={game.selectedVoice}
                   activeLabel={activeLabel}
                   rejection={game.rejection}
@@ -484,7 +490,8 @@ export function App() {
                   pcs={pcs}
                   targetPcs={puzzle.target.pitchClasses}
                   rule={rule}
-                  spelling={spelling}
+                  spelling={noteSpell}
+                  targetSpelling={spellingFor(spelling, puzzle.target)}
                   selectedVoice={game.selectedVoice}
                   activeLabel={activeLabel}
                   matchCount={matchCount}
@@ -509,11 +516,11 @@ export function App() {
                     data-delta={d}
                     disabled={locked || finished}
                     aria-disabled={locked || finished}
-                    aria-label={locked ? `${d > 0 ? '+' : ''}${d} locked on Half-Steps Only day` : `Move voice ${game.selectedVoice + 1} ${d > 0 ? 'up' : 'down'} ${Math.abs(d)} to ${pcName(toPc, spelling)}`}
+                    aria-label={locked ? `${d > 0 ? '+' : ''}${d} locked on Half-Steps Only day` : `Move voice ${game.selectedVoice + 1} ${d > 0 ? 'up' : 'down'} ${Math.abs(d)} to ${pcName(toPc, noteSpell)}`}
                     onClick={() => move(game.selectedVoice, d)}
                   >
                     <span className="sw-step-delta">{d > 0 ? `+${d}` : d}</span>
-                    <span className="sw-step-note">→ {pcName(toPc, spelling)}</span>
+                    <span className="sw-step-note">→ {pcName(toPc, noteSpell)}</span>
                     {locked ? (
                       <span className="sw-step-lock-badge" aria-hidden="true">
                         <Icon name="half-step-lock" small />

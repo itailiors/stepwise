@@ -3,7 +3,8 @@
 
 export type PitchClass = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
 
-export type NoteSpellingMode = 'sharp' | 'flat';
+/** 'auto' spells each chord the way it's usually written (Eb Maj, F Min with Ab, F# Maj with A#). */
+export type NoteSpellingMode = 'sharp' | 'flat' | 'auto';
 export type InputViewMode = 'rail' | 'clock';
 export type ThemeMode = 'light' | 'dark';
 

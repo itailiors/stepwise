@@ -61,6 +61,8 @@ export interface ClockProps {
   targetPcs: readonly PitchClass[];
   rule: DailyRule;
   spelling: NoteSpellingMode;
+  /** Target notes keep the target chord's spelling. */
+  targetSpelling?: NoteSpellingMode;
   selectedVoice: number;
   activeLabel: string;
   matchCount: number;
@@ -72,7 +74,7 @@ export interface ClockProps {
 }
 
 export function Clock(props: ClockProps) {
-  const { pcs, targetPcs, rule, spelling, selectedVoice, activeLabel, matchCount, checkpointMet, rejection, disabled, onSelect, onMove } =
+  const { pcs, targetPcs, rule, spelling, targetSpelling, selectedVoice, activeLabel, matchCount, checkpointMet, rejection, disabled, onSelect, onMove } =
     props;
   const angles = useMorph(pcs);
   const lavaPc = ruleForbiddenPc(rule);
@@ -168,7 +170,7 @@ export function Clock(props: ClockProps) {
               if (lavaPc === pc) cls.push('is-lava');
               return (
                 <text key={pc} x={lx.toFixed(1)} y={(ly + 4).toFixed(1)} textAnchor="middle" className={cls.join(' ')}>
-                  {pcName(pc, spelling)}
+                  {pcName(pc, target.has(pc) && targetSpelling ? targetSpelling : spelling)}
                 </text>
               );
             })}
