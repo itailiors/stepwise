@@ -65,7 +65,7 @@ export function App() {
   const pcs = currentPcs(game);
   const activeChord: ChordNode = game.steps.at(-1)?.chord ?? puzzle.start;
   const activeLabel = respell(activeChord, spelling).symbol;
-  // Single notes (voice chips, rail, steppers) follow the chord currently sounding.
+  // Single notes (voice chips, rail, steppers, the lava note in the rule pill) follow the chord currently sounding.
   const noteSpell = spellingFor(spelling, activeChord);
   const cpMet = checkpointMet(game);
   const matchCount = countTargetMatches(pcs, puzzle.target.pitchClasses);
@@ -343,7 +343,7 @@ export function App() {
               <span className="sw-rule-icon">
                 <Icon name={RULE_ICON[rule.kind]} small />
               </span>
-              <span>{ruleLabel(rule, spelling)}</span>
+              <span>{ruleLabel(rule, noteSpell)}</span>
               <span className="sw-rule-pill-info" aria-hidden="true">ⓘ</span>
             </button>
           </div>
@@ -377,7 +377,7 @@ export function App() {
         </header>
 
         <div className="sw-rule-banner" id="sw-rule-banner" hidden={!ruleOpen}>
-          <span>{ruleDetail(rule, spelling)}</span>
+          <span>{ruleDetail(rule, noteSpell)}</span>
           <button type="button" className="sw-rule-banner-close" aria-label="Dismiss rule explanation" onClick={() => setRuleOpen(false)}>
             ✕
           </button>

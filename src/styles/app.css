@@ -482,15 +482,18 @@
   .sw-shell {
     height: 100dvh;
     min-height: 0;
+    overflow-y: auto; /* phones too short for everything scroll here instead of clipping */
   }
 
-  .sw-workspace,
-  .sw-ladder-column {
+  .sw-workspace {
     min-height: 0;
   }
 
+  /* No min-height: 0 here: the column must stay at least as tall as its start + target cards, or
+     they spill over the HUD on short phones. Only the scroll area shrinks; past that the page scrolls. */
   .sw-ladder-column {
     flex: 1 1 0;
+    min-height: auto;
   }
 
   .sw-ladder-scroll {
