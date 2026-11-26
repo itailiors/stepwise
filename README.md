@@ -2,7 +2,7 @@
 
 Daily voice-leading ladder puzzle: slide one voice ±1/±2 semitones per move to morph the Start chord into the Target chord. Every step must be a real chord. Beat Par.
 
-Static Vite + React + TypeScript app, zero backend. Builds to `dist/` for Cloudflare Pages / Vercel / Netlify (build command `npm run build`, output `dist`, relative `base` so any sub-path works).
+Static Vite + React + TypeScript app, zero backend. Live at https://itailiors.github.io/stepwise/ — every push to `main` runs `npm run check` and deploys `dist/` to GitHub Pages (`.github/workflows/deploy.yml`, same setup as Reharm; PRs only check). `SITE_URL` makes `og:image`/`og:url` absolute for link previews; `base: './'` keeps the build portable to any host or sub-path.
 
 ## Commands
 
