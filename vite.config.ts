@@ -40,9 +40,18 @@ function absoluteOgUrls(siteUrl: string | undefined): Plugin {
       return html
         .replace(
           '<meta property="og:image" content="og-image.jpg" />',
-          `<meta property="og:image" content="${base}og-image.jpg" />\n    <meta property="og:url" content="${base}" />`,
+          `<meta property="og:image" content="${base}og-image.jpg" />\n    <meta property="og:url" content="${base}" />\n    <link rel="canonical" href="${base}" />`,
         )
         .replace('<meta name="twitter:image" content="og-image.jpg" />', `<meta name="twitter:image" content="${base}og-image.jpg" />`);
+    },
+    generateBundle() {
+      if (!siteUrl) return;
+      const base = siteUrl.endsWith('/') ? siteUrl : `${siteUrl}/`;
+      this.emitFile({
+        type: 'asset',
+        fileName: 'sitemap.xml',
+        source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${base}</loc></url>\n</urlset>\n`,
+      });
     },
   };
 }
